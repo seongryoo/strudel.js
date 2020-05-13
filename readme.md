@@ -1,18 +1,16 @@
-# strudel.js :apple:
+# strudel.js
 
-A simple way to handle DOM element focus and aria rules! <3
+A simple way to handle DOM element focus and aria rules :heart:
 
 Having complex interactive elements on a web page can make it difficult to manually update `tabindex` and `aria-hidden`. But updating these attributes is super important for making any website accessible to people using keyboard or voice controls! strudel.js lets you define rules for tabindex and aria visibility *once* instead of dealing with a web of event listeners. 
 
 ## Quick example
 
 ```javascript
-strudel.query(() => {
-	return strudel.hasClass('.menu', 'opened');
-  })
-  .else()
-  .watch('.menu', 'class')
-  .reaction('.burger', 'focusable');
+strudel.query(function() { return strudel.hasClass('.menu', 'opened'); })
+    .else()
+    .watch('.menu', 'class')
+    .reaction('.burger', 'focusable');
 ```
 This code block will automatically change all DOM elements with class 'burger' to be focusable when the `.menu` element has the class `opened`. The call to `.else()` tells strudel to apply the opposite condition (i.e. change burger elements to be unfocusable) in the case of the condition *not* being met.
 
