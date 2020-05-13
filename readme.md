@@ -27,25 +27,25 @@ strudel's syntax is based off of the syntax of a typical CSS media query:
 }
 ```
 That is, you define:
-1. a part of the web page to monitor for change
-  - e.g. `.watch('.menu', 'class')` in strudel, `screen` in css
-2. a specific condition to satisfy
-  - e.g. the anonymous function passed into the `query()` call in strudel,  `max-width: 48em` in css
-3. and a functionality which is applied only if the condition is satisfied.
-  - e.g. `.reaction('.burger', 'focusable')` in strudel, `.burger` styling in css
+1. a part of the web page to monitor for change\
+e.g. `.watch('.menu', 'class')` in strudel, `screen` in css\
+2. a specific condition to satisfy\
+e.g. the anonymous function passed into the `query()` call in strudel,  `max-width: 48em` in css\
+3. and a functionality which is applied only if the condition is satisfied.\
+e.g. `.reaction('.burger', 'focusable')` in strudel, `.burger` styling in css\
   
 ## Reference
 
-`strudel.query(conditionFunction)`
+`strudel.query(conditionFunction)`\
 Set a new focus/aria rule and pass in a condition function.
-
-`.else()`
+\
+`.else()`\
 Add anywhere to a `query()` call chain to specify that the opposite behavior should be applied if the condition is not met.
-
-`.watch(selector, attributeName)`
+\
+`.watch(selector, attributeName)`\
 Creates a MutationObserver object which waits until the `attributeName` attribute in the selected element changes. Note! If you specify a selector with multiple valid elements (e.g. using class name selector), then strudel will only listen for changes in the first qualifying element.
-
-`.reaction(selector, behavior)`
+\
+`.reaction(selector, behavior)`\
 There are currently four behaviors to choose from: 
   - `focusable`, which sets an element's `tabindex=0`
   - `unfocusable`, which sets an element's `tabindex=-1`
@@ -56,4 +56,4 @@ You can make chains to your heart's desire! For instance, you might chain multip
 
 ## Discussion
 
-This tool operates on the assumption that assigning `tabindex` and `aria-hidden` values is a device and browser-compatible method for engaging with the Accessibility API. This may change over time, and it may change depending on the kind of technology that your audience uses. The reader is referred to libraries like [ally.js](https://allyjs.io/), which more thoroughly handle device compatibility concerns related to `tabindex` and `aria-hidden`.
+This tool operates under the assumption that assigning `tabindex` and `aria-hidden` values is a device and browser-compatible method for engaging with the Accessibility API. This may change over time, and it may change depending on the kind of technology that your audience uses. The reader is referred to libraries like [ally.js](https://allyjs.io/), which more thoroughly handle device compatibility concerns related to `tabindex` and `aria-hidden`.
