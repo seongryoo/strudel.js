@@ -1,4 +1,4 @@
-# strudel.js
+# strudel.js :apple:
 
 A simple way to handle DOM element focus and aria rules! <3
 
