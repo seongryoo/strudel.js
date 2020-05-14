@@ -76,8 +76,6 @@ function StrudelQuery(condition) {
   this.checkElseCondition = false;
   this.observers = new Array();
   this.reactors = new Array();
-  this.validBehaviors = ['focusable', 'unfocusable', 'ariahidden', 'ariavisible'];
-  this.opposites = ['unfocusable', 'focusable', 'ariavisible', 'ariahidden'];
   const self = this;
 
   this.else = function () {
@@ -86,7 +84,6 @@ function StrudelQuery(condition) {
   }
   
   this.allReact = function () {
-    console.log("CHANGE REGISTERED");
     let conditionSatisfied = this.condition();
     for (let i = 0; i < this.reactors.length; i++) {
       let reactor = this.reactors[i];
