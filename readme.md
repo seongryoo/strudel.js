@@ -27,39 +27,50 @@ strudel's syntax is based off of the syntax of a typical CSS media query:
 }
 ```
 That is, you define:
-1. a part of the web page to monitor for change\
-e.g. `.watch('.menu', 'class')` in strudel, `screen` in css
-\
-2. a specific condition to satisfy\
-e.g. the anonymous function passed into the `query()` call in strudel,  `max-width: 48em` in css
-\
-3. and a functionality which is applied only if the condition is satisfied.\
-e.g. `.reaction('.burger', 'focusable')` in strudel, `.burger` styling in css
-\
-  
+1. a part of the web page to monitor for change
+
+   e.g. `.watch('.menu', 'class')` in strudel, `screen` in css
+
+
+
+2. a specific condition to satisfy
+
+   e.g. the anonymous function passed into the `query()` call in strudel,  `max-width: 48em` in css
+
+
+
+3. and a functionality which is applied only if the condition is satisfied.
+
+   e.g. `.reaction('.burger', 'focusable')` in strudel, `.burger` styling in css
+
+
+
 ## Reference
 
-`strudel.query(conditionFunction)`\
+`strudel.query(conditionFunction)`
+
 Set a new focus/aria rule and pass in a condition function.
-\
-\
-`.else()`\
+
+
+`.else()`
+
 Add anywhere to a `query()` call chain to specify that the opposite behavior should be applied if the condition is not met.
-\
-\
-`.watch(selector, attributeName)`\
+
+
+`.watch(selector, attributeName)`
+
 Creates a MutationObserver object which waits until the `attributeName` attribute in the selected element changes. Note! If you specify a selector with multiple valid elements (e.g. using class name selector), then strudel will only listen for changes in the first qualifying element.
-\
-\
-`.reaction(selector, behavior)`\
+
+
+`.reaction(selector, behavior)`
+
 There are currently four behaviors to choose from: 
   - `focusable`, which sets an element's `tabindex=0`
   - `unfocusable`, which sets an element's `tabindex=-1`
   - `ariavisible`, which removes an element's `aria-hidden=true` attribute
   - `ariahidden`, which adds an `aria-hidden=true` attribute
-\
-\
-  
+
+
 You can make chains to your heart's desire! For instance, you might chain multiple `.watch()` calls to define multiple different relevant elements to be monitored. You could also add multiple `.reaction` calls to have many kinds of elements react to a single condition in different ways.
 
 ## Discussion
