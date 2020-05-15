@@ -1,5 +1,5 @@
 function Strudel() {
-  this.query = function(conditionFunction) {
+  this.query = function (conditionFunction) {
     return new StrudelQuery(conditionFunction);
   }
 }
@@ -11,22 +11,22 @@ function StrudelQuery(conditionFunction) {
   this.conditionFunction = conditionFunction;
   this.observers = new Array();
   this.reactions = new Array();
-  
-  this.getLastReaction = function() {
+
+  this.getLastReaction = function () {
     return this.reactions[this.reactions.length - 1];
   }
-  
+
   /* The following methods are, for the most part,
   the only ones that will be used as part of the 
   client api */
-  
-  this.else = function() {
+
+  this.else = function () {
     let lastReaction = this.getLastReaction();
     lastReaction.doNegative = true;
     return this;
   }
-  
-  this.watch = function(actor, attributeName) {
+
+  this.watch = function (actor, attributeName) {
     let callback = function (mutations, observer) {
       for (let i = 0; i < mutations.length; i++) {
         let mutation = mutations[i];
@@ -49,43 +49,43 @@ function StrudelQuery(conditionFunction) {
 
     return this;
   }
-  
-  this.reaction = function(selector) {
+
+  this.reaction = function (selector) {
     let rxn = new StrudelReaction(selector);
     this.reactions.push(rxn);
-    
+
     return this;
   }
-  
-  this.set = function(attribute, value) {
+
+  this.set = function (attribute, value) {
     let lastReaction = this.getLastReaction();
     let action = new StrudelAction('set', attribute, value);
     lastReaction.addPos(action);
-    
+
     return this;
   }
-  
-  this.add = function(attribute) {
+
+  this.add = function (attribute) {
     let lastReaction = this.getLastReaction();
     let action = new StrudelAction('add', attribute, 'none');
     lastReaction.addPos(action);
-    
+
     return this;
   }
-  
-  
-  this.remove = function(attribute) {
+
+
+  this.remove = function (attribute) {
     let lastReaction = this.getLastReaction();
     let action = new StrudelAction('remove', attribute, 'none');
     lastReaction.addPos(action);
-    
+
     return this;
   }
-  
-  
+
+
   /* Here ends the main client api methods */
-  
-  this.allReact = function() {
+
+  this.allReact = function () {
     let cond = this.conditionFunction();
     for (let i = 0; i < this.reactions.length; i++) {
       let reaction = this.reactions[i];
@@ -96,7 +96,7 @@ function StrudelQuery(conditionFunction) {
       }
     }
   }
-  
+
 }
 
 function StrudelReaction(selector) {
@@ -105,27 +105,27 @@ function StrudelReaction(selector) {
   this.positiveActions = new Array();
   this.negativeActions = new Array();
   this.doNegative = false;
-  
-  this.addPos = function(strudelAction) {
+
+  this.addPos = function (strudelAction) {
     this.positiveActions.push(strudelAction);
   }
-  
-  this.addNeg = function(strudelAction) {
+
+  this.addNeg = function (strudelAction) {
     this.positiveActions.push(strudelAction);
   }
-  
-  this.doPositiveActions = function() {
+
+  this.doPositiveActions = function () {
     this.doActions(this.positiveActions);
   }
-  
-  this.doNegativeActions = function() {
+
+  this.doNegativeActions = function () {
     this.doActions(this.negativeActions);
   }
-  
-  this.doActions = function(array) {
+
+  this.doActions = function (array) {
     for (let i = 0; i < this.array.length; i++) {
       let action = this.array[i];
-      for (let j = 0; j < this.elements.length; i ++) {
+      for (let j = 0; j < this.elements.length; i++) {
         let element = this.elements[j];
         if (action.type == 'add') {
           element.createAttribute(action.attribute);
@@ -139,8 +139,8 @@ function StrudelReaction(selector) {
       }
     }
   }
-  
-  
+
+
 }
 
 function StrudelAction(type, attribute, value) {
