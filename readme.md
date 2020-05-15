@@ -4,6 +4,8 @@ A simple way to handle DOM element focus and aria rules :heart:
 
 Having complex interactive elements on a web page can make it difficult to manually update `tabindex` and `aria-hidden`. But updating these attributes is super important for making any website accessible to people using keyboard or voice controls! strudel.js lets you define rules for tabindex and aria visibility *once* instead of dealing with a web of event listeners. 
 
+*Note!* This repository includes a development version of strudel.js, which aims to expand strudel's functionality by allowing for any attribute change to be applied to a rule, as well as specifying else conditions per reactor instead of per query.
+
 ## Quick example
 
 ```javascript
