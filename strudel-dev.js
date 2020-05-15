@@ -60,7 +60,11 @@ function StrudelQuery(conditionFunction) {
   this.set = function (attribute, value) {
     let lastReaction = this.getLastReaction();
     let action = new StrudelAction('set', attribute, value);
-    lastReaction.addPos(action);
+    if (!lastReaction.doNegative) {
+      lastReaction.addPos(action);
+    } else {      
+      lastReaction.addNeg(action);
+    }
 
     return this;
   }
@@ -68,7 +72,11 @@ function StrudelQuery(conditionFunction) {
   this.add = function (attribute) {
     let lastReaction = this.getLastReaction();
     let action = new StrudelAction('add', attribute, 'none');
-    lastReaction.addPos(action);
+    if (!lastReaction.doNegative) {
+      lastReaction.addPos(action);
+    } else {      
+      lastReaction.addNeg(action);
+    }
 
     return this;
   }
@@ -77,7 +85,11 @@ function StrudelQuery(conditionFunction) {
   this.remove = function (attribute) {
     let lastReaction = this.getLastReaction();
     let action = new StrudelAction('remove', attribute, 'none');
-    lastReaction.addPos(action);
+    if (!lastReaction.doNegative) {
+      lastReaction.addPos(action);
+    } else {      
+      lastReaction.addNeg(action);
+    }
 
     return this;
   }
