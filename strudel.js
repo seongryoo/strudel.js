@@ -1,105 +1,78 @@
 function Strudel() {
-  /* Basic helper methods which define important functionality. */
-  /* The developer is encouraged to modify these as needed. */
-  
-  this.makeFocusable = function (element) {
-    element.setAttribute('tabIndex', 0);
-  }
-  this.makeNotFocusable = function (element) {
-    element.setAttribute('tabIndex', -1);
-  }
-  this.makeAria = function (element) {
-    element.removeAttribute('aria-hidden');
-  }
-  this.makeNotAria = function (element) {
-    element.setAttribute('aria-hidden', 'true');
-  }
-
   this.query = function (conditionFunction) {
-    let strudelQuery = new StrudelQuery(conditionFunction);
-    return strudelQuery;
-  }
-  
-  this.attrCheck = function(selector, attribute, value) {
+    return new StrudelQuery(conditionFunction);
+  };
+
+  this.isAttr = function (selector, attribute, value) {
     let element = document.querySelectorAll(selector)[0];
     return element.getAttribute(attribute) == value;
-  }
-  
-  this.hasClass = function(selector, className) {
+  };
+
+  this.hasAttr = function (selector, attribute) {
+    let element = document.querySelectorAll(selector)[0];
+    return element.hasAttribute(attribute);
+  };
+
+  this.hasClass = function (selector, className) {
     let element = document.querySelectorAll(selector)[0];
     return element.classList.contains(className);
-  }
-  
-  this.styleCheck = function(selector, style, value) {
+  };
+
+  this.isStyle = function (selector, style, value) {
     let element = document.querySelectorAll(selector)[0];
     return getComputedStyle(element)[style] == value;
-  }
-}
+  };
 
-function StrudelRouter() {
-  this.processBehavior = function(behaviorString) {
-    if (behaviorString == 'focusable') {
-      return strudel.makeFocusable;
-    } else if (behaviorString == 'unfocusable') {
-      return strudel.makeNotFocusable;
-    } else if (behaviorString == 'ariahidden') {
-      return strudel.makeNotAria;
-    } else if (behaviorString == 'ariavisible') {
-      return strudel.makeAria;
-    } else {
-      console.log('Please make sure to use a valid behavior name!');
-      return;
-    }
-  }
+  this.clickPress = function (selector, callback) {
+    let elements = document.querySelectorAll(selector);
+    
+    for (let i = 0; i < elements.length; i++) {
+      let element = elements[i];
+      element.addEventListener('click', callback);
+      element.addEventListener('keydown', function (event) {
 
-  this.oppositeBehavior = function(behaviorString) {
-    if (behaviorString == 'focusable') {
-      return strudel.makeNotFocusable;
-    } else if (behaviorString == 'unfocusable') {
-      return strudel.makeFocusable;
-    } else if (behaviorString == 'ariahidden') {
-      return strudel.makeAria;
-    } else if (behaviorString == 'ariavisible') {
-      return strudel.makeNotAria;
-    } else {
-      console.log('Please make sure to use a valid behavior name!');
-      return;
+        if (event.key == " " || event.key == "Spacebar") {
+          event.preventDefault();
+          callback();
+        }
+        if (event.key == "Enter") {
+          callback();
+        }
+        
+      });
     }
-  }
+    
+  };
+  
 }
 
 const strudel = new Strudel();
-const router = new StrudelRouter();
 
-function StrudelQuery(condition) {
-  this.condition = condition;
-  this.checkElseCondition = false;
-  this.observers = new Array();
-  this.reactors = new Array();
+function StrudelQuery(conditionFunction) {
   const self = this;
+  this.conditionFunction = conditionFunction;
+  this.observers = new Array();
+  this.reactions = new Array();
+
+  this.getLastReaction = function () {
+    return this.reactions[this.reactions.length - 1];
+  };
+
+  /* The following methods are, for the most part,
+  the only ones that will be used as part of the
+  client api */
 
   this.else = function () {
-    this.checkElseCondition = true;
+    let lastReaction = this.getLastReaction();
+    lastReaction.doNegative = true;
     return this;
-  }
-  
-  this.allReact = function () {
-    let conditionSatisfied = this.condition();
-    for (let i = 0; i < this.reactors.length; i++) {
-      let reactor = this.reactors[i];
-      if (conditionSatisfied) {
-        reactor.act();
-      } else if (this.checkElseCondition) {
-        reactor.actNot();
-      }
-    }
-  }
-  
+  };
+
   this.watch = function (actor, attributeName) {
     let callback = function (mutations, observer) {
       for (let i = 0; i < mutations.length; i++) {
         let mutation = mutations[i];
-        if (mutation.type === 'attributes' &&
+        if (mutation.type === "attributes" &&
           mutation.attributeName == attributeName) {
           self.allReact();
           break;
@@ -117,36 +90,115 @@ function StrudelQuery(condition) {
     this.observers.push(observer);
 
     return this;
-  }
-  
+  };
 
-  
-  this.reaction = function(reactor, behavior) {
-    let behaviorFunction = router.processBehavior(behavior);
-    let oppositeFunction = router.oppositeBehavior(behavior);
-    let rxn = new StrudelReaction(reactor, behaviorFunction, oppositeFunction);
-    this.reactors.push(rxn);
+  this.reaction = function (selector) {
+    let rxn = new StrudelReaction(selector);
+    this.reactions.push(rxn);
+
     return this;
-  }
-  
+  };
+
+  this.set = function (attribute, value) {
+    let lastReaction = this.getLastReaction();
+    let action = new StrudelAction("set", attribute, value);
+    if (!lastReaction.doNegative) {
+      lastReaction.addPos(action);
+    } else {
+      lastReaction.addNeg(action);
+    }
+
+    return this;
+  };
+
+  this.add = function (attribute) {
+    let lastReaction = this.getLastReaction();
+    let action = new StrudelAction("add", attribute, "none");
+    if (!lastReaction.doNegative) {
+      lastReaction.addPos(action);
+    } else {
+      lastReaction.addNeg(action);
+    }
+
+    return this;
+  };
+
+
+  this.remove = function (attribute) {
+    let lastReaction = this.getLastReaction();
+    let action = new StrudelAction("remove", attribute, "none");
+    if (!lastReaction.doNegative) {
+      lastReaction.addPos(action);
+    } else {
+      lastReaction.addNeg(action);
+    }
+
+    return this;
+  };
+
+
+  /* Here ends the main client api methods */
+
+  this.allReact = function () {
+    let cond = this.conditionFunction();
+    for (let i = 0; i < this.reactions.length; i++) {
+      let reaction = this.reactions[i];
+      if (cond) {
+        reaction.doPositiveActions();
+      } else if (reaction.doNegative) {
+        reaction.doNegativeActions();
+      }
+    }
+  };
+
 }
 
-function StrudelReaction(reactor, behaviorFunction, oppositeFunction) {
-  this.behaviorFunction = behaviorFunction;
-  this.reactors = document.querySelectorAll(reactor);
-  this.oppositeFunction = oppositeFunction;
-  
-  this.act = function () {
-    for (let i = 0; i < this.reactors.length; i++) {
-      let element = this.reactors[i];
-      this.behaviorFunction(element);
-    }
-  }
+function StrudelReaction(selector) {
+  this.selector = selector;
+  this.positiveActions = new Array();
+  this.negativeActions = new Array();
+  this.doNegative = false;
 
-  this.actNot = function () {
-    for (let i = 0; i < this.reactors.length; i++) {
-      let element = this.reactors[i];
-      this.oppositeFunction(element);
+  this.addPos = function (strudelAction) {
+    this.positiveActions.push(strudelAction);
+  };
+
+  this.addNeg = function (strudelAction) {
+    this.negativeActions.push(strudelAction);
+  };
+
+  this.doPositiveActions = function () {
+    this.doActions(this.positiveActions);
+  };
+
+  this.doNegativeActions = function () {
+    this.doActions(this.negativeActions);
+  };
+
+  this.doActions = function (actions) {
+    let elements = document.querySelectorAll(selector);
+    for (let i = 0; i < actions.length; i++) {
+      let doAction = actions[i];
+      for (let j = 0; j < elements.length; j++) {
+        let element = elements[j];
+        if (doAction.type == "add") {
+          element.setAttribute(doAction.attribute, true);
+        } else if (doAction.type == "set") {
+          element.setAttribute(doAction.attribute, doAction.value);
+        } else if (doAction.type == "remove") {
+          element.removeAttribute(doAction.attribute);
+        } else {
+          console.log("Strudel: Unrecognized action type of " + doAction.type);
+        }
+      }
     }
-  }
+  };
+
+
+}
+
+function StrudelAction(type, attribute, value) {
+  this.type = type;
+  this.attribute = attribute;
+  this.value = value;
 }
