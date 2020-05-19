@@ -106,7 +106,7 @@ In the below example, note how allReact() is called on the query object to make 
 
 ```javascript
 let strudelNav = strudel.query(isMenuOpen)
-  .watch('#hamburgerButton', 'display')
+  .watch('#hamburgerButton', 'style')
   .watch('#header', 'class')
 
   .reaction('.logo-link')
