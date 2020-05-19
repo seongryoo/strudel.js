@@ -1,6 +1,6 @@
 # strudel.js
 
-A simple way to handle DOM element focus and aria rules :heart:
+A simple way to handle dynamic, conditional values for HTML attributes. :heart:
 
 Having complex interactive elements on a web page often requires conditional updating of attribute values like `tabindex`, `aria-hidden`, or even `aria-label`. strudel.js automates the dynamic attribute values, so you don't have to manually change them on every user interaction!
 
