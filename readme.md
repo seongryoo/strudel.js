@@ -1,10 +1,14 @@
 # strudel.js
 
+
+![Animated gif showing various HTML elements dynamically adjusting attribute values](attributes.gif)
+
+
+
 A simple way to handle HTML attributes that change in reaction to keyboard interaction! :heart:
 
 Having complex interactive elements on a web page often requires conditional updating of attribute values like `tabindex`, `aria-hidden`, or even `aria-label`. strudel.js automates the dynamic attribute values, so you don't have to manually change them on every user interaction!
 
-![Animated gif showing various HTML elements dynamically adjusting attribute values](attributes.gif)
 
 ## Quick example
 
